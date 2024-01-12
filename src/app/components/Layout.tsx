@@ -12,22 +12,22 @@ const Layout = () => {
         setSelectedStory(storyId);
     };
 
-  return (
-      <section>
-          <div>
-              <Navbar />
-              <div className="flex bg-gray-900">
+    return (
+        <section>
+            <div>
+                <Navbar />
+                <div className="flex bg-gray-900">
 
-                  <AllStories onStoryClick={handleStoryClick} />
+                    <AllStories onStoryClick={handleStoryClick} />
 
-                  {selectedStory !== null &&
-                      <StoryDetails storyId={selectedStory} />
-                  }
+                    {selectedStory !== null &&
+                        <StoryDetails storyId={selectedStory} />
+                    }
 
-              </div>
-          </div>
-    </section>
-  )
+                </div>
+            </div>
+        </section>
+    )
 }
 
 export default Layout
