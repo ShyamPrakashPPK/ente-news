@@ -29,14 +29,11 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                 const storyIds = await response.json();
 
                 const storiesData = await Promise.all(
-                    storyIds.map(async (id: any) => {
+                    storyIds.map(async (id:any) => {
                         const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
                         return storyResponse.json();
                     })
                 );
-
-                console.log(storiesData,"stories data...");
-                
 
                 setStories(storiesData);
             } catch (error) {
@@ -45,8 +42,7 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
         };
 
         fetchStories();
-    });
-
+    }, []);
 
 
     return (
@@ -55,7 +51,7 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                 <h2 className=' text-xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-br  from-green-500 to-lime-500'>All Stories</h2>
                 <ul className='flex flex-col '>
                     {stories.map((story) => (
-                        <li key={story.id} className='mb-2  hover:bg-green-300 p-1 rounded-md transition-colors duration-100 ease-in-out'>
+                        <li key={story.id} className='mb-2  hover:bg-green-300 p-1 rounded-md transition-colors duration-200 ease-in-out'>
                             <a href={story.url} target="_blank" rel="noopener noreferrer" className='text-gray-900 font-bold'>
                                 {story.title}
                             </a>
