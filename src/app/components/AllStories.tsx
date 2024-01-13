@@ -54,10 +54,12 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                             <a href={story.url} target="_blank" rel="noopener noreferrer" className='text-gray-900 font-bold'>
                                 {story.title}
                             </a>
-                            <div className='flex flex-col md:flex-row  md:items-center text-gray-500 text-sm'>
-                                <span className='mr-2 text-green-600 font-bold'>{story.by}</span>
-                                <span className='mr-2 text-green-600 font-light'>{story.score} points</span>
-                                <span onClick={() => onStoryClick(story.id)} className='mr-2 text-green-600 font-light'>{story.descendants} comments</span>
+                            <div className='flex justify-between md:justify-start items-center text-gray-500 text-sm'>
+                                <div>
+                                    <span className='mr-2 text-green-600 font-bold'>{story.by}</span>
+                                    <span className='mr-2 text-green-600 font-light'>{story.score} points</span>
+                                    <span onClick={() => onStoryClick(story.id)} className='mr-2 text-green-600 font-light'>{story.descendants} comments</span>
+                                </div>
                                 <div onClick={() => onStoryClick(story.id)} className='w-8 h-8 text-green-600'> <ChatBubbleBottomCenterTextIcon /></div>
                             </div>
                         </li>
@@ -65,6 +67,7 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                 </ul>
             </div>
         </section>
+
     );
 };
 

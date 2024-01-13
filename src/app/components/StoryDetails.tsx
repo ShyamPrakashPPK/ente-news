@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 interface StoryDetailsProps {
@@ -66,7 +67,7 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
     }, [comment.kids]);
 
     const formattedTime = formatRelativeTime(comment.time);
-    
+
     const renderHTMLWithLinks = (html: string) => {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const links = doc.querySelectorAll('a');
@@ -78,19 +79,27 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
     };
 
     return (
-        <div key={comment.id} className='border-2 border-green-500 p-4 my-2 rounded-xl flex flex-col'>
-            <div className='flex items-center mb-2'>
-                <div className='text-green-500 font-bold text-lg'>{comment.by}</div>
-                <span className='font-normal text-sm text-gray px-3'>{formattedTime}</span>
+        <div
+            className="border-2 border-green-500 p-4 my-2 rounded-xl flex flex-col max-w-full mx-auto prose"
+            style={{ whiteSpace: 'pre-line' }}
+        >
+            <div className="flex items-center mb-2">
+                <div className="text-green-500 font-bold text-lg">{comment.by}</div>
+                <span className="font-normal text-sm text-gray px-3">{formattedTime}</span>
             </div>
-            <p className='text-green-500'></p>
-            {/* Render HTML content with links */}
+            <p className="text-green-500"></p>
+            {/* <!-- Render HTML content with links --> */}
             <p dangerouslySetInnerHTML={{ __html: renderHTMLWithLinks(comment.text) }} />
-            <p className='text-gray-500'></p>
+            <p className="text-gray-500"></p>
             {replies.map((reply: Comment) => (
                 <CommentItem key={reply.id} comment={reply} />
             ))}
         </div>
+
+
+
+
+
     );
 };
 
@@ -131,21 +140,26 @@ const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ s
     const formattedTime = formatRelativeTime(storyDetails.time);
 
     return (
-        <div className='flex-1 p-10 bg-gray-200 text-gray-900 flex flex-col fixed inset-0    justify-center items-center z-50' >
+        <div className='flex-1 p-5 bg-gray-200 text-gray-900  fixed inset-0 z-50' >
             <div className="p-2" onClick={onClose}>close</div>
+            <div className='flex flex-col'>
+                <h2 className='text-2xl text-center md:text-3xl font-bold mb-1 text-transparent bg-clip-text bg-gradient-to-br from-green-700 to-lime-500'>{storyDetails.title}</h2>
+                <div className='mb-2 flex flex-col md:flex-row  md:items-baseline md:justify-center'>
+                    <p className='mr-1 text-xl text-center font-bold'>{storyDetails.by} <span className='ml-2 text-gray-800 text-sm font-bold'>{formattedTime}</span></p>
+                    <p className='mr-2 text-sm text-center'>Score:{storyDetails.score}</p>
+                    <p className='mr-2 text-sm text-center'>Comments: {storyDetails.descendants}</p>
 
-            <h2 className='text-2xl md:text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-br from-green-700 to-lime-500'>{storyDetails.title}</h2>
-            <div className='mb-4 flex  flex-col'>
-                <p className='mr-2 text-xl font-bold'>{storyDetails.by} <span className='ml-2 text-gray-800 text-sm font-bold'>{formattedTime}</span></p>
-
-                <p className='mr-2 text-sm text-center'>Score:{storyDetails.score}</p>
-                <p className='mr-2 text-sm text-center'>Comments: {storyDetails.descendants}</p>
-
+                </div>
+                <p className='text-center text-[10px] text-green-600'>
+                    <a href={storyDetails.url} target="_blank" rel="noopener noreferrer" className='font-bold'>
+                        {storyDetails.url}
+                </a> </p>
             </div>
-            <p className='mb-4 text-[10px] text-green-800'>{storyDetails.url}</p>
+
+            
 
             <h3 className='text-xl font-bold mt-4'>Comments:</h3>
-            <div className='max-h-[70vh] overflow-y-auto'>
+            <div className='max-h-[70vh] max-w-full w-[100%] overflow-y-auto'>
                 {comments.map((comment: Comment) => (
                     <CommentItem key={comment.id} comment={comment} />
                 ))}
