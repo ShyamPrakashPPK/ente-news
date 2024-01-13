@@ -24,12 +24,10 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
             try {
                 const response = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
                 const storyIds = await response.json();
-                const fetchedStoriesData = [];
                 for (const id of storyIds) {
                     const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
                     const storyData = await storyResponse.json();
-                    fetchedStoriesData.push(storyData);
-                    setStories(fetchedStoriesData);  // Update state for each story individually
+                    setStories(prevStories => [...prevStories, storyData]);
                 }
             } catch (error) {
                 console.error('Error fetching stories:', error);
@@ -39,7 +37,7 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
     }, []);
 
     return (
-        <section className='h-[150vh] p-3 md:p-10 w-full bg-gray-200  border-gray-700 overflow-y-auto'>
+        <section className='h-full p-3 md:p-10 w-full bg-gray-200  border-gray-700 overflow-y-auto'>
             <div>
                 <h2 className=' text-xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-br  from-green-500 to-lime-500'>All Stories</h2>
                 <ul className='flex flex-col '>

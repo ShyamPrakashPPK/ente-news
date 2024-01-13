@@ -80,7 +80,7 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 
     return (
         <div
-            className="border-2 bg-gray-300  border-green-500 p-4 my-2 rounded-xl flex flex-col max-w-full  "
+            className="border-2 bg-gray-300  border-green-500 p-4 my-2 rounded-xl flex flex-col max-w-full "
             style={{ whiteSpace: 'pre-line' }}
         >
             <div className="flex items-center mb-2">
@@ -88,9 +88,8 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
                 <span className="font-normal text-sm text-gray px-3">{formattedTime}</span>
             </div>
             <p className="text-green-500"></p>
-            {/* <!-- Render HTML content with links --> */}
             <p dangerouslySetInnerHTML={{ __html: renderHTMLWithLinks(comment.text) }} />
-            <p className="text-gray-900"></p>
+            <p className="text-gray-900 "></p>
             {replies.map((reply: Comment) => (
                 <CommentItem key={reply.id} comment={reply} />
             ))}
@@ -126,18 +125,15 @@ const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ s
                 console.error('Error fetching story details:', error);
             }
         };
-
         fetchStoryDetails();
     }, [storyId]);
 
     if (!storyDetails) {
         return <div>Loading...</div>;
     }
-
     const formattedTime = formatRelativeTime(storyDetails.time);
-
     return (
-        <div className='flex-1 p-5 bg-gray-200 text-gray-900  fixed inset-0 z-50' >
+        <div className='flex-1 p-5 bg-gray-200 text-gray-900  h-full fixed inset-0 z-50 mb-32' >
             <div className="p-2" onClick={onClose}>close</div>
             <div className='flex flex-col'>
                 <h2 className='text-2xl text-center md:text-3xl font-bold mb-1 text-transparent bg-clip-text bg-gradient-to-br from-green-700 to-lime-500'>{storyDetails.title}</h2>
@@ -154,8 +150,8 @@ const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ s
             </div>
 
             <h3 className='text-xl font-bold mt-4'>Comments:</h3>
-            <div className='max-h-[80%] max-w-full w-[100%] overflow-x-hidden'>
-                {comments.map((comment: Comment) => (
+            <div className='max-h-full max-w-full w-[100%] overflow-x-hidden'>
+                {comments.map((comment) => (
                     <CommentItem key={comment.id} comment={comment} />
                 ))}
             </div>
