@@ -102,9 +102,10 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 
 
 
-const StoryDetails: React.FC<StoryDetailsProps> = ({ storyId='', params }): JSX.Element => {
+const StoryDetails: React.FC<any> = ({  params }): JSX.Element => {
     const [storyDetails, setStoryDetails] = useState<Story | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
+    let storyId: number | null = null;
     const { push } = useRouter();
 
  
