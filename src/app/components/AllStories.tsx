@@ -13,26 +13,21 @@ interface Story {
     type: string;
     url: string;
 }
-
 interface AllStoriesProps {
     onStoryClick: (storyId: number) => void;
 }
 
 const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
     const [stories, setStories] = useState<Story[]>([]);
-
     useEffect(() => {
         const fetchStories = async () => {
             try {
                 const response = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
                 const storyIds = await response.json();
-
                 const fetchedStoriesData = [];
-
                 for (const id of storyIds) {
                     const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
                     const storyData = await storyResponse.json();
-
                     fetchedStoriesData.push(storyData);
                     setStories(fetchedStoriesData);  // Update state for each story individually
                 }
@@ -40,7 +35,6 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                 console.error('Error fetching stories:', error);
             }
         };
-
         fetchStories();
     }, []);
 
