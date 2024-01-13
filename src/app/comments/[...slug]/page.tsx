@@ -1,11 +1,9 @@
 'use client'
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 interface StoryDetailsProps {
-    storyId: number | null;
+    storyId?: number | null;
     params: { slug: string[] };
 }
 
@@ -104,10 +102,9 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 
 
 
-const StoryDetails: React.FC<StoryDetailsProps> = ({ params }): JSX.Element => {
+const StoryDetails: React.FC<StoryDetailsProps> = ({ storyId='', params }): JSX.Element => {
     const [storyDetails, setStoryDetails] = useState<Story | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
-    let storyId: number | null = null;
     const { push } = useRouter();
 
  
