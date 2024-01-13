@@ -80,7 +80,7 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 
     return (
         <div
-            className="border-2 border-green-500 p-4 my-2 rounded-xl flex flex-col max-w-full mx-auto "
+            className="border-2 bg-gray-300  border-green-500 p-4 my-2 rounded-xl flex flex-col max-w-full  "
             style={{ whiteSpace: 'pre-line' }}
         >
             <div className="flex items-center mb-2">
@@ -90,7 +90,7 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
             <p className="text-green-500"></p>
             {/* <!-- Render HTML content with links --> */}
             <p dangerouslySetInnerHTML={{ __html: renderHTMLWithLinks(comment.text) }} />
-            <p className="text-gray-500"></p>
+            <p className="text-gray-900"></p>
             {replies.map((reply: Comment) => (
                 <CommentItem key={reply.id} comment={reply} />
             ))}
@@ -154,7 +154,7 @@ const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ s
             </div>
 
             <h3 className='text-xl font-bold mt-4'>Comments:</h3>
-            <div className='max-h-[70vh] max-w-full w-[100%] overflow-x-hidden'>
+            <div className='max-h-[80%] max-w-full w-[100%] overflow-x-hidden'>
                 {comments.map((comment: Comment) => (
                     <CommentItem key={comment.id} comment={comment} />
                 ))}
