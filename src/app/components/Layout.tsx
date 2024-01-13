@@ -1,39 +1,51 @@
-'use client'
-import React, { useState } from 'react'
-import Navbar from './Navbar'
-import AllStories from './AllStories'
-import StoryDetails from './StoryDetails'
-// ... (your imports)
-// ... (your imports)
+// 'use client'
+// import React, { useEffect, useState } from 'react'
+// import Navbar from './Navbar'
+// import AllStories from './AllStories'
+// import { useRouter } from 'next/navigation'
+// import dynamic from 'next/dynamic';
 
-const Layout = () => {
-    const [selectedStory, setSelectedStory] = useState<number | null>(null);
+// interface CommentsProps {
+//     storyId: any;
+//     onClose: () => void;
+// }
 
-    const handleStoryClick = (storyId: number) => {
-        setSelectedStory(storyId);
-    };
+// const DynamicComments = dynamic<CommentsProps>(() => import('../comments/[id]/page'), { ssr: false });
 
-    const handleClose = () => {
-        setSelectedStory(null);
-    };
+// interface LayoutProps {
+//     children: React.ReactNode;
+// }
 
-    return (
-        <section className="flex flex-col h-screen">
-            <Navbar />
-            <div className="flex flex-row">
-                <div className="w-full md:w-1/5 bg-gray-900 h-[100vh] overflow-x-scroll">
+// const Layout: React.FC<LayoutProps> = ({ children }) => {
+//     const [selectedStory, setSelectedStory] = useState<number | null>(null);
+//     const router = useRouter();
 
-                    <AllStories onStoryClick={handleStoryClick} />
-                </div>
-                <div className="md:w-4/5 bg-gray-200 h-[100vh] overflow-x-scroll">
-                    {selectedStory !== null && (
-                        <StoryDetails storyId={selectedStory} onClose={handleClose} />
-                    )}
-                </div>
-            </div>
-          
-        </section>
-    );
-};
+//     const handleStoryClick = (storyId: number) => {
+//         setSelectedStory(storyId);
+//         router.push(`/comments/${storyId}`, undefined);
+//     };
 
-export default Layout;
+//     const handleClose = () => {
+//         setSelectedStory(null);
+//     };
+
+//     return (
+//         <section className="flex flex-col h-screen">
+//             <Navbar />
+//             <div className="flex flex-row">
+//                 <div className="w-full md:w-1/5 bg-gray-900 h-[100vh] overflow-x-scroll">
+//                     <AllStories onStoryClick={handleStoryClick} />
+//                 </div>
+//                 <div className="md:w-4/5 bg-gray-200 h-[100vh] overflow-x-scroll">
+//                     {selectedStory !== null ? (
+//                         <DynamicComments storyId={selectedStory} onClose={handleClose} />
+//                     ) : (
+//                         children
+//                     )}
+//                 </div>
+//             </div>
+//         </section>
+//     );
+// };
+
+// export default Layout;

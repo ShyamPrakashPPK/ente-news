@@ -19,22 +19,41 @@ interface AllStoriesProps {
 
 const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
     const [stories, setStories] = useState<Story[]>([]);
+    const [startIndex, setStartIndex] = useState<number>(0);
+    const storiesLimit = 10;
+
+
     useEffect(() => {
         const fetchStories = async () => {
             try {
                 const response = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
                 const storyIds = await response.json();
-                for (const id of storyIds) {
-                    const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
-                    const storyData = await storyResponse.json();
-                    setStories(prevStories => [...prevStories, storyData]);
-                }
+
+                const newStories = await Promise.all(
+                    storyIds.slice(startIndex, startIndex + storiesLimit).map(async (id:any) => {
+                        const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
+                        return await storyResponse.json();
+                    })
+                );
+
+                setStories(newStories);
             } catch (error) {
                 console.error('Error fetching stories:', error);
             }
         };
         fetchStories();
-    }, []);
+    }, [startIndex]);
+
+    // console.log(stories,'-------------------------------------------heree----------------------------');
+    
+    const handleNextClick = () => {
+        setStartIndex(startIndex + storiesLimit);
+    };
+
+    const handlePrevClick = () => {
+        const newStartIndex = Math.max(0, startIndex - storiesLimit);
+        setStartIndex(newStartIndex);
+    };
 
     return (
         <section className='h-full p-3 md:p-10 w-full bg-gray-200  border-gray-700 overflow-y-auto'>
@@ -57,9 +76,12 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                         </li>
                     ))}
                 </ul>
+                <div className='flex justify-between mt-4'>
+                    <button onClick={handlePrevClick} disabled={startIndex === 0} className='bg-gray-500 px-4 py-2 rounded-md text-white'>&lt; Previous</button>
+                    <button onClick={handleNextClick} className='bg-gray-500 px-4 py-2 rounded-md text-white'>Next &gt;</button>
+                </div>
             </div>
         </section>
-
     );
 };
 

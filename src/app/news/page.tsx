@@ -1,12 +1,12 @@
-import React from 'react'
-import Layout from '../components/Layout'
+// import React from 'react'
+// import Comments from '../comments/[id]/page'
 
-const page = () => {
-    return (
-        <div>
-            <Layout />
-        </div>
-    )
-}
+// const page = () => {
+//     return (
+//         <div>
+//             <Comments/>
+//         </div>
+//     )
+// }
 
-export default page
+// export default page

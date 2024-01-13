@@ -9,7 +9,7 @@ const HomePage = () => {
               <h1 className='text-white text-5xl md:text-7xl font-black '>ente news</h1>
               <h3 className='text-gray-300 text-lg md:text-2xl mb-3 '>Latest News and Blogs with ente news</h3>
               <button className='bg-black rounded-xl transition duration-300 ease-in-out hover:scale-110 text-white px-10 py-2 mt-3'>
-                  <Link href='/news'>Go to news</Link>
+                  <Link href='/comments'>Go to news</Link>
               </button>
           </div>
 
