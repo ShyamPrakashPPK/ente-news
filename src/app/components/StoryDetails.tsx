@@ -80,7 +80,7 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 
     return (
         <div
-            className="border-2 border-green-500 p-4 my-2 rounded-xl flex flex-col max-w-full mx-auto prose"
+            className="border-2 border-green-500 p-4 my-2 rounded-xl flex flex-col max-w-full mx-auto "
             style={{ whiteSpace: 'pre-line' }}
         >
             <div className="flex items-center mb-2">
@@ -107,17 +107,14 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ storyId, onClose }) => {
     const [storyDetails, setStoryDetails] = useState<Story | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
-
     useEffect(() => {
         const fetchStoryDetails = async () => {
             try {
                 const response = await fetch(`https://hacker-news.firebaseio.com/v0/item/${storyId}.json?print=pretty`);
                 const data = await response.json();
                 setStoryDetails(data);
-
                 if (data.kids) {
                     const fetchedComments = [];
-
                     for (const commentId of data.kids) {
                         const commentResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json?print=pretty`);
                         const commentData = await commentResponse.json();
@@ -156,10 +153,8 @@ const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ s
                 </a> </p>
             </div>
 
-            
-
             <h3 className='text-xl font-bold mt-4'>Comments:</h3>
-            <div className='max-h-[70vh] max-w-full w-[100%] overflow-y-auto'>
+            <div className='max-h-[70vh] max-w-full w-[100%] overflow-x-hidden'>
                 {comments.map((comment: Comment) => (
                     <CommentItem key={comment.id} comment={comment} />
                 ))}
