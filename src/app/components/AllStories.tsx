@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/20/solid';
 
 interface Story {
@@ -28,14 +27,15 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                 const response = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
                 const storyIds = await response.json();
 
-                const storiesData = await Promise.all(
-                    storyIds.map(async (id:any) => {
-                        const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
-                        return storyResponse.json();
-                    })
-                );
+                const fetchedStoriesData = [];
 
-                setStories(storiesData);
+                for (const id of storyIds) {
+                    const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
+                    const storyData = await storyResponse.json();
+
+                    fetchedStoriesData.push(storyData);
+                    setStories(fetchedStoriesData);  // Update state for each story individually
+                }
             } catch (error) {
                 console.error('Error fetching stories:', error);
             }
@@ -44,9 +44,8 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
         fetchStories();
     }, []);
 
-
     return (
-        <section className='h-[100vh] p-3 md:p-10 w-full bg-gray-200  border-gray-700 overflow-y-auto'>
+        <section className='h-[150vh] p-3 md:p-10 w-full bg-gray-200  border-gray-700 overflow-y-auto'>
             <div>
                 <h2 className=' text-xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-br  from-green-500 to-lime-500'>All Stories</h2>
                 <ul className='flex flex-col '>
@@ -61,7 +60,6 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
                                 <span onClick={() => onStoryClick(story.id)} className='mr-2 text-green-600 font-light'>{story.descendants} comments</span>
                                 <div onClick={() => onStoryClick(story.id)} className='w-8 h-8 text-green-600'> <ChatBubbleBottomCenterTextIcon /></div>
                             </div>
-
                         </li>
                     ))}
                 </ul>

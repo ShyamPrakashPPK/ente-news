@@ -1,4 +1,3 @@
-'use client'
 import React, { useEffect, useState } from 'react';
 
 interface StoryDetailsProps {
@@ -27,6 +26,26 @@ interface Story {
     url: string;
 }
 
+
+const formatRelativeTime = (timestamp: number): string => {
+    const now = new Date();
+    const timeDiffInSeconds = Math.floor((now.getTime() - timestamp * 1000) / 1000);
+
+    if (timeDiffInSeconds < 60) {
+        return `${timeDiffInSeconds} sec ago`;
+    } else if (timeDiffInSeconds < 3600) {
+        const minutes = Math.floor(timeDiffInSeconds / 60);
+        return `${minutes} min ago`;
+    } else if (timeDiffInSeconds < 86400) {
+        const hours = Math.floor(timeDiffInSeconds / 3600);
+        return `${hours} hour ago`;
+    } else {
+        const days = Math.floor(timeDiffInSeconds / 86400);
+        return `${days} day ago`;
+    }
+};
+
+
 const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
     const [replies, setReplies] = useState<Comment[]>([]);
 
@@ -38,7 +57,6 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
                     const replyData = await replyResponse.json();
                     return replyData;
                 });
-
                 const replyData = await Promise.all(replyPromises);
                 setReplies(replyData);
             }
@@ -47,10 +65,20 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
         fetchReplies();
     }, [comment.kids]);
 
+    const formattedTime = formatRelativeTime(comment.time);
+
     return (
-        <div key={comment.id} className='border p-4 my-2'>
-            <p>{comment.by}</p>
+        <div key={comment.id} className='border-2 border-green-500 p-4 my-2 rounded-xl flex flex-col'>
+
+            <div className='flex items-center mb-2'>
+                <div className='text-green-500 font-bold text-lg'>{comment.by}</div>
+                <span className='font-normal text-sm text-gray px-3'>{formattedTime}</span>
+            </div>
+
+            <p className='text-green-500'></p>
+
             <p>{comment.text}</p>
+            <p className='text-gray-500'></p>
 
             {replies.map((reply: Comment) => (
                 <CommentItem key={reply.id} comment={reply} />
@@ -59,7 +87,8 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
     );
 };
 
-const StoryDetails: React.FC<StoryDetailsProps> = ({ storyId }) => {
+
+const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ storyId, onClose }) => {
     const [storyDetails, setStoryDetails] = useState<Story | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
 
@@ -71,14 +100,14 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ storyId }) => {
                 setStoryDetails(data);
 
                 if (data.kids) {
-                    const commentPromises = data.kids.map(async (commentId: number) => {
+                    const fetchedComments = [];
+
+                    for (const commentId of data.kids) {
                         const commentResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json?print=pretty`);
                         const commentData = await commentResponse.json();
-                        return commentData;
-                    });
-
-                    const commentData = await Promise.all(commentPromises);
-                    setComments(commentData);
+                        fetchedComments.push(commentData);
+                        setComments(fetchedComments);  // Update state for each comment individually
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching story details:', error);
@@ -92,17 +121,28 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ storyId }) => {
         return <div>Loading...</div>;
     }
 
+    const formattedTime = formatRelativeTime(storyDetails.time);
+
     return (
-        <div className='flex-1 p-10 bg-gray-900 text-gray-300'>
-            <h2 className='text-2xl font-bold mb-4'>{storyDetails.title}</h2>
-            <p>{storyDetails.by}</p>
-            <p>{storyDetails.score}</p>
-            <p>{storyDetails.url}</p>
+        <div className='flex-1 p-10 bg-gray-200 text-gray-900 flex flex-col fixed inset-0    justify-center items-center z-50' >
+            <div className="p-2" onClick={onClose}>close</div>
+
+            <h2 className='text-2xl md:text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-br from-green-700 to-lime-500'>{storyDetails.title}</h2>
+            <div className='mb-4 flex  flex-col'>
+                <p className='mr-2 text-xl font-bold'>{storyDetails.by} <span className='ml-2 text-gray-800 text-sm font-bold'>{formattedTime}</span></p>
+
+                <p className='mr-2 text-sm text-center'>Score:{storyDetails.score}</p>
+                <p className='mr-2 text-sm text-center'>Comments: {storyDetails.descendants}</p>
+
+            </div>
+            <p className='mb-4 text-[10px] text-green-800'>{storyDetails.url}</p>
 
             <h3 className='text-xl font-bold mt-4'>Comments:</h3>
-            {comments.map((comment: Comment) => (
-                <CommentItem key={comment.id} comment={comment} />
-            ))}
+            <div className='max-h-[70vh] overflow-y-auto'>
+                {comments.map((comment: Comment) => (
+                    <CommentItem key={comment.id} comment={comment} />
+                ))}
+            </div>
         </div>
     );
 };
