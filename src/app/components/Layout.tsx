@@ -4,6 +4,7 @@ import Navbar from './Navbar'
 import AllStories from './AllStories'
 import StoryDetails from './StoryDetails'
 // ... (your imports)
+// ... (your imports)
 
 const Layout = () => {
     const [selectedStory, setSelectedStory] = useState<number | null>(null);
@@ -13,21 +14,24 @@ const Layout = () => {
     };
 
     const handleClose = () => {
-        setSelectedStory(null); // Set selectedStory to null when the close button is clicked
+        setSelectedStory(null);
     };
 
     return (
-        <section>
-            <div>
-                <Navbar />
-                <div className="flex bg-gray-900">
-                    <AllStories onStoryClick={handleStoryClick} />
+        <section className="flex flex-col h-screen">
+            <Navbar />
+            <div className="flex flex-row">
+                <div className="w-full md:w-1/5 bg-gray-900 h-[100vh] overflow-x-scroll">
 
-                    {selectedStory !== null &&
+                    <AllStories onStoryClick={handleStoryClick} />
+                </div>
+                <div className="md:w-4/5 bg-gray-200 h-[100vh] overflow-x-scroll">
+                    {selectedStory !== null && (
                         <StoryDetails storyId={selectedStory} onClose={handleClose} />
-                    }
+                    )}
                 </div>
             </div>
+          
         </section>
     );
 };

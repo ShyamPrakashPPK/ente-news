@@ -94,11 +94,6 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
                 <CommentItem key={reply.id} comment={reply} />
             ))}
         </div>
-
-
-
-
-
     );
 };
 
@@ -133,7 +128,7 @@ const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ s
     }
     const formattedTime = formatRelativeTime(storyDetails.time);
     return (
-        <div className='flex-1 p-5 bg-gray-200 text-gray-900  h-full fixed inset-0 z-50 mb-32' >
+        <div className='flex-1 p-5 bg-gray-200 text-gray-900 h-full fixed inset-0 z-50 mb-32 md:static md:inset-auto md:z-auto' >
             <div className="p-2" onClick={onClose}>close</div>
             <div className='flex flex-col'>
                 <h2 className='text-2xl text-center md:text-3xl font-bold mb-1 text-transparent bg-clip-text bg-gradient-to-br from-green-700 to-lime-500'>{storyDetails.title}</h2>
@@ -146,7 +141,7 @@ const StoryDetails: React.FC<StoryDetailsProps & { onClose: () => void }> = ({ s
                 <p className='text-center text-[10px] text-green-600'>
                     <a href={storyDetails.url} target="_blank" rel="noopener noreferrer" className='font-bold'>
                         {storyDetails.url}
-                </a> </p>
+                    </a> </p>
             </div>
 
             <h3 className='text-xl font-bold mt-4'>Comments:</h3>
