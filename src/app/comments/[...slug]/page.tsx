@@ -104,7 +104,7 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 
 
 
-const StoryDetails: React.FC<StoryDetailsProps> = ({ params }) => {
+const StoryDetails: React.FC<StoryDetailsProps> = ({ params }): JSX.Element => {
     const [storyDetails, setStoryDetails] = useState<Story | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
     let storyId: number | null = null;
