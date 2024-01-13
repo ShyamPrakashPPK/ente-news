@@ -66,20 +66,27 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
     }, [comment.kids]);
 
     const formattedTime = formatRelativeTime(comment.time);
+    
+    const renderHTMLWithLinks = (html: string) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const links = doc.querySelectorAll('a');
+        links.forEach((link) => {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+        });
+        return doc.body.innerHTML;
+    };
 
     return (
         <div key={comment.id} className='border-2 border-green-500 p-4 my-2 rounded-xl flex flex-col'>
-
             <div className='flex items-center mb-2'>
                 <div className='text-green-500 font-bold text-lg'>{comment.by}</div>
                 <span className='font-normal text-sm text-gray px-3'>{formattedTime}</span>
             </div>
-
             <p className='text-green-500'></p>
-
-            <p>{comment.text}</p>
+            {/* Render HTML content with links */}
+            <p dangerouslySetInnerHTML={{ __html: renderHTMLWithLinks(comment.text) }} />
             <p className='text-gray-500'></p>
-
             {replies.map((reply: Comment) => (
                 <CommentItem key={reply.id} comment={reply} />
             ))}
