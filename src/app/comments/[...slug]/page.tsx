@@ -6,7 +6,9 @@ import React, { useEffect, useState } from 'react';
 
 interface StoryDetailsProps {
     storyId: any;
+    params: { slug: string[] };
 }
+
 
 interface Comment {
     by: string;
@@ -101,12 +103,8 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 };
 
 
-interface StoryDetailsProps {
-    params: { slug: string[] };
-}
 
-
-const StoryDetails: React.FC<StoryDetailsProps> = ({params }) => {
+const StoryDetails: React.FC<StoryDetailsProps> = ({ params }) => {
     const [storyDetails, setStoryDetails] = useState<Story | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
     let storyId: number | null = null;
