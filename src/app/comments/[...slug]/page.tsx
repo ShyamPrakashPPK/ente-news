@@ -5,7 +5,7 @@ import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 interface StoryDetailsProps {
-    storyId: any;
+    storyId: number | null;
     params: { slug: string[] };
 }
 
