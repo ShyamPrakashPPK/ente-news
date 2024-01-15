@@ -22,30 +22,30 @@ const AllStories: React.FC<AllStoriesProps> = ({ onStoryClick }) => {
     const [startIndex, setStartIndex] = useState<number>(0);
     const storiesLimit = 10;
 
-
     useEffect(() => {
         const fetchStories = async () => {
             try {
                 const response = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
                 const storyIds = await response.json();
 
-                const newStories = await Promise.all(
-                    storyIds.slice(startIndex, startIndex + storiesLimit).map(async (id:any) => {
-                        const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
-                        return await storyResponse.json();
-                    })
-                );
+                const newStories: Story[] = [];
 
-                setStories(newStories);
+                for (let i = startIndex; i < startIndex + storiesLimit; i++) {
+                    const id = storyIds[i];
+                    const storyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`);
+                    const story = await storyResponse.json();
+
+                    // Update state for each story individually
+                    setStories((prevStories) => [...prevStories, story]);
+                }
             } catch (error) {
                 console.error('Error fetching stories:', error);
             }
         };
+
         fetchStories();
     }, [startIndex]);
 
-    // console.log(stories,'-------------------------------------------heree----------------------------');
-    
     const handleNextClick = () => {
         setStartIndex(startIndex + storiesLimit);
     };

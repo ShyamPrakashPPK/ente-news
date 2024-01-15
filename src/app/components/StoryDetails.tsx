@@ -111,10 +111,7 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ params }) => {
 
     let storyId: number | null = null;
 
-
-
     useEffect(() => {
-
         if (params.slug.length === 1) {
             storyId = parseInt(params.slug[0], 10);
         }
@@ -127,10 +124,15 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ params }) => {
                 if (data && data.kids) {
                     setStoryDetails(data);
 
-                    const fetchedComments = [];
+                    const fetchedComments: Comment[] = [];
+
+                    // Fetch and update state for each comment individually
                     for (const commentId of data.kids) {
                         const commentResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json?print=pretty`);
                         const commentData = await commentResponse.json();
+
+                        setComments((prevComments) => [...prevComments, commentData]);
+
                         fetchedComments.push(commentData);
                     }
 

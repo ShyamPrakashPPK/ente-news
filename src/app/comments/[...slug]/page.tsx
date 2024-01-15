@@ -56,12 +56,17 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
     useEffect(() => {
         const fetchReplies = async () => {
             if (comment.kids) {
-                const replyPromises = comment.kids.map(async (replyId: number) => {
+                const replyData: Comment[] = [];
+
+                for (const replyId of comment.kids) {
                     const replyResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${replyId}.json?print=pretty`);
-                    const replyData = await replyResponse.json();
-                    return replyData;
-                });
-                const replyData = await Promise.all(replyPromises);
+                    const replyCommentData = await replyResponse.json();
+
+                    setReplies((prevReplies) => [...prevReplies, replyCommentData]);
+
+                    replyData.push(replyCommentData);
+                }
+
                 setReplies(replyData);
             }
         };
@@ -102,13 +107,11 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 
 
 
-const StoryDetails: React.FC<any> = ({  params }): JSX.Element => {
+const StoryDetails: React.FC<any> = ({ params }): JSX.Element => {
     const [storyDetails, setStoryDetails] = useState<Story | null>(null);
     const [comments, setComments] = useState<Comment[]>([]);
     let storyId: number | null = null;
     const { push } = useRouter();
-
- 
 
     const handleGoBack = () => {
         push('/comments'); // Redirect to localhost/comments
@@ -127,12 +130,13 @@ const StoryDetails: React.FC<any> = ({  params }): JSX.Element => {
                 if (data && data.kids) {
                     setStoryDetails(data);
 
-                    const fetchedComments = [];
-                    for (const commentId of data.kids) {
-                        const commentResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json?print=pretty`);
-                        const commentData = await commentResponse.json();
-                        fetchedComments.push(commentData);
-                    }
+                    // Fetch and update state for each comment individually
+                    const fetchedComments: Comment[] = await Promise.all(
+                        data.kids.map(async (commentId: number) => {
+                            const commentResponse = await fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json?print=pretty`);
+                            return commentResponse.json();
+                        })
+                    );
 
                     setComments(fetchedComments);
                 } else {
@@ -145,10 +149,6 @@ const StoryDetails: React.FC<any> = ({  params }): JSX.Element => {
 
         fetchStoryDetails();
     }, [storyId]);
-
-
-    console.log(storyId,'-----------------------');
-    
 
     if (!storyDetails) {
         return <div>Loading...</div>;
